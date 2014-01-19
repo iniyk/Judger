@@ -4,9 +4,7 @@ using namespace Judger;
 
 int Compile::SetupByCmpFile(int director, const String &cmp_path) {
     FILE *cmp_file;
-    char str_cmp_file_path[MAX_FILE_PATH];
-    str_cmp_file_path = cmp_path.c_str();
-    cmp_file = fopen(str_cmp_file_path, "r");
+    cmp_file = fopen(cmp_file.c_str(), "r");
     
     if (cmp_file == NULL) return 2;
     LangSetting &lst = lsa[director];
@@ -59,6 +57,8 @@ int Compile::SetupByCmpFile(int director, const String &cmp_path) {
 void Compiler::init() {
     lsa.clear();
     ld.clear();
+    lm.clear();
+    error_message = "";
 }
 
 int Compiler::Register(const String &cmp_file) {
@@ -79,6 +79,28 @@ int Compiler::Register(const String &cmp_file) {
    }
 }
 
-int Compiler::Compile(const String &target_file_path, const String output_exec_file) {
+int Compiler::Compile(const String lang_name, const String &target_file_path, const String output_exec_file) {
     
 }
+
+int Compiler::setupLimits(const String &ini_file_path) {
+    FILE *ini_file = fopen(ini_file_path.c_str(), "r");
+    if (ini_file == NULL) {
+        return 2;
+    }
+    char chrBuff[MAX_STR_LENGTH];
+    while (fscanf(ini_file, "%s", chrBuff) != EOF) {
+        String limit_name = chrBuff;
+        int limit_numer;
+        if (fscanf(ini_file, "%d", &limit_numer) == EOF) {
+            return 1;
+        }
+        lm[limit_name] = limit_numer;
+    }
+    return 0;
+}
+
+String Compiler::Error() {
+    return error_message;
+}
+ 

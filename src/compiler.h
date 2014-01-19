@@ -20,7 +20,8 @@
 
 namespace Judger{
 
-const MAX_FILE_PATH = 1024;
+const int MAX_FILE_PATH = 1024;
+const int MAX_STR_LENGTH = 1024;
 
 typedef std::string String;
 typedef std::pair<String, String> CompileOpt;
@@ -62,17 +63,72 @@ struct LangSetting{
 typedef std::vector<LangSetting> LangSettingArr;
 typedef std::map<String, int> LangDirector;
 
+typedef std::map<String, int> LimitMap;
+
 class Compiler{
 private:
     /*------------------data-----------------*/
     LangSettingArr lsa;
     LangDirector ld;
+    LimitMap lm;
+    String error_message;
     /*-----------private function------------*/
+    /*
+     *  Func : Read an cmp file & regist a new compiler by it
+     *  Input : [director, cmp_path]
+     *          director : id of lsa underlabel
+     *          cmp_path : cmp file path
+     *  Ret   : 0 normal return
+     *          1 cmp file formatting error
+     *          2 cmp file path invalid
+     */
     int SetupByCmpFile(int director, const String &cmp_path);
 public:
+    /*
+     * Func : use this function BEFORE using this class
+     */
     void init();
+    /*
+     * Func : set up limits such as time limit & memeory limit by an ini file
+     * Input : [ini_file_path]
+     *          ini_file_path : setup file path
+     * Ret   : 0 normal return
+     *         1 ini file formatting error
+     *         2 ini file path invalid
+     */
+    int setupLimits(const String &ini_file_path);
+    /*
+     * Func : register a new compiler by cmp file
+     * Input : [cmp_path]
+     *          cmp_path : cmp file path
+     * Ret : 0 normal return
+     *       1 cmp file formatting error
+     *       2 cmp file path invalid
+     *       3 language has already been registered
+     *
+     */
     int Register(const String &cmp_path);
-    int Compile(const String &target_file_path, const String &output_exec_file);
+    /*
+     * Func : compile target file
+     * Input : [lang_name, target_file_path, output_exec_file]
+     *          lang_name : language name
+     *          target_file_path : target file path
+     *          output_exec_file : output execute file path
+     * Ret : 0 normal return
+     *       1 compile error, error message will be saven & could get it by Error() Func
+     *       2 target file invalid
+     *       3 language has not been registered
+     *
+     */
+    int Compile(const String &lang_name, const String &target_file_path, const String &output_exec_file);
+    /*
+     * Func : get last compile error message
+     * Ret : if Compile() hasn't been used since last init() it will return ""
+     *       if no error occured last Compile() it will return ""
+     *       else will get the error message
+     *
+     */
+    String Error();
 };
 
 }
