@@ -11,67 +11,13 @@
 #include "common.h"
 
 namespace Judger{
-
-    typedef std::pair<String, String> CompileOpt;
-    typedef std::vector<CompileOpt> CmpOptArr;
-    typedef std::vector<string> StrVector;
-
-    struct LangSetting{
-        String lang_name;
-        String compiler_cmd;
-        String output_file_opt;
-        CmpOptArr coa;
-        LangSetting() {
-            coa.clear();
-            compiler_cmd = "";
-            lang_name = "";
-            output_file_opt = "";""
-        }
-        LangSetting(const String &name, const String &cmd, const String &ofo) {
-            lang_name = name;
-            compiler_cmd = cmd;
-            output_file_opt = ofo;
-            coa.clear();
-        }
-        void init(const String &name, const String &cmd, const String &ofo) {
-            lang_name = name;
-            compiler_cmd = cmd;
-            output_file_opt = ofo;
-            coa.clear();
-        }
-        void regOption(const String &para, const String &var="") {
-            CompileOpt co;
-            co = make_pair(para, var);
-            coa.push_back(co);
-        }
-    };
-
-    typedef std::vector<LangSetting> LangSettingArr;
-    typedef std::map<String, int> LangDirector;
-
     class Compiler{
-    private:
-        /*------------------data-----------------*/
-        LangSettingArr lsa;
-        LangDirector ld;
-        LimitMap lm;
-        String error_message;
-        /*-----------private function------------*/
-        /*
-         *  Func : Read an cmp file & regist a new compiler by it
-         *  Input : [director, cmp_path]
-         *          director : id of lsa underlabel
-         *          cmp_path : cmp file path
-         *  Ret   : 0 normal return
-         *          1 cmp file formatting error
-         *          2 cmp file path invalid
-         */
-        int SetupByCmpFile(int director, const String &cmp_path);
     public:
+        Compiler();
         /*
          * Func : use this function BEFORE using this class
          */
-        void init();
+        void reset();
         /*
          * Func : set up limits such as time limit & memeory limit by an ini file
          * Input : [ini_file_path]
@@ -102,7 +48,7 @@ namespace Judger{
          *       1 compile error, error message will be saven & could get it by Error() Func
          *       2 target file invalid
          *       3 language has not been registered
-         *
+         *       4 compiler execute failed
          */
         int Compile(const String &lang_name, const String &target_file_path, const String &output_exec_file);
         /*
@@ -113,6 +59,59 @@ namespace Judger{
          *
          */
         String Error();
+    private:
+        typedef std::pair<String, String> CompileOpt;
+        typedef std::vector<CompileOpt> CmpOptArr;
+
+        struct LangSetting{
+            String lang_name;
+            String compiler_cmd;
+            String output_file_opt;
+            CmpOptArr coa;
+            LangSetting() {
+                coa.clear();
+                compiler_cmd = "";
+                lang_name = "";
+                output_file_opt = "";""
+            }
+            LangSetting(const String &name, const String &cmd, const String &ofo) {
+                lang_name = name;
+                compiler_cmd = cmd;
+                output_file_opt = ofo;
+                coa.clear();
+            }
+            void init(const String &name, const String &cmd, const String &ofo) {
+                lang_name = name;
+                compiler_cmd = cmd;
+                output_file_opt = ofo;
+                coa.clear();
+            }
+            void regOption(const String &para, const String &var="") {
+                CompileOpt co;
+                co = make_pair(para, var);
+                coa.push_back(co);
+            }
+        };
+
+        typedef std::vector<LangSetting> LangSettingArr;
+        typedef std::map<String, int> LangDirector;
+        
+        /*------------------data-----------------*/
+        LangSettingArr lsa;
+        LangDirector ld;
+        LimitMap lm;
+        String error_message;
+        /*-----------private function------------*/
+        /*
+         *  Func : Read an cmp file & regist a new compiler by it
+         *  Input : [director, cmp_path]
+         *          director : id of lsa underlabel
+         *          cmp_path : cmp file path
+         *  Ret   : 0 normal return
+         *          1 cmp file formatting error
+         *          2 cmp file path invalid
+         */
+        int SetupByCmpFile(int director, const String &cmp_path);
     };
 
 }

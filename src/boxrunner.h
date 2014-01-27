@@ -12,17 +12,13 @@
 #include "sandbox.h"
 
 namespace Judger{
-    typedef std::vector<String> ArgsArray;
     class BoxRunner {
-    private:
-        LimitMap lm;
-        ArgsArray aa;
-        String result;
     public:
+        BoxRunner();
         /*
          * Func : use this function BEFORE using this class
          */
-        void init();
+        void reset();
         /*
          * Func : add a limit such as time limit & memeory limit
          * Input : [limit_name, limit_val]
@@ -56,5 +52,30 @@ namespace Judger{
          *
          */
         String Result();
+    private:
+        //Sandbox Defination
+        const String result_name[] = {"PD", "OK", "RF", "ML", "OL", "TL", "RT", "AT", "IE", "BP", NULL};
+        typedef action_t* (*rule_t)(const sandbox_t*, const event_t*, action_t*);
+        typedef struct
+        {
+           sandbox_t sbox;
+           policy_t default_policy;
+           rule_t sc_table[INT16_MAX + 1];
+        } minisbox_t;
+        typedef enum
+        {
+            P_ELAPSED = 0, P_CPU = 1, P_MEMORY = 2,
+        } probe_t;
+        //Sandbox Function
+        res_t probe(const sandbox_t* psbox, probe_t key);
+        void policy(const policy_t*, const event_t*, action_t*);
+        action_t* _KILL_RF(const sandbox_t*, const event_t*, action_t*);
+        action_t* _CONT(const sandbox_t*, const event_t*, action_t*);
+        
+        typedef std::vector<String> ArgsArray;
+
+        LimitMap lm;
+        ArgsArray aa;
+        String result;
     };
 }

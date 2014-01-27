@@ -54,7 +54,14 @@ int Compile::SetupByCmpFile(int director, const String &cmp_path) {
     return 0;
 }
 
-void Compiler::init() {
+Compiler::Compiler() {
+    lsa.clear();
+    ld.clear();
+    lm.clear();
+    error_message = "";
+}
+
+void Compiler::reset() {
     lsa.clear();
     ld.clear();
     lm.clear();
@@ -79,8 +86,28 @@ int Compiler::Register(const String &cmp_file) {
    }
 }
 
-int Compiler::Compile(const String lang_name, const String &target_file_path, const String output_exec_file) {
+int Compiler::Compile(const String lang_name, const String &target_file_path, const String &output_exec_file) {
+    int lang_dir = ld[lang_name];
+    String compile_command_string = "";
+    compile_command_string += lsa[lang_dir].compiler_cmd;
+    for (int i=0; i<(int)lsa[lang_dir].coa.size(); ++i) {
+        compile_command_string += " " + lsa[lang_dir].coa[i].first;
+        if (lsa[lang_dir].coa[i].second != "") {
+            compile_command_string += " " + las[lang_dir].coa[i].second;
+        }
+    }
+    compile_command_string += " " + output_file_opt + " " + output_file_opt;
+    compile_command_string += " " + target_file_path;
+    // compile_command_string setup finish
     
+    pid_t pid = fork();
+    if (pid == -1) return 4;
+    if (pid == 0) {
+        //child process
+        
+    } else {
+        
+    }
 }
 
 int Compiler::setupLimits(const String &ini_file_path) {
