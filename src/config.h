@@ -7,29 +7,35 @@ namespace Judegr{
     class Config{
     public:
         Config();
+        /**
+         * @param  file_path ini file path
+         * @return           0 Normal return, with no error occur
+         *                   1 ini file FORMAT ERROR
+         *                   2 ini file path invalid
+         */
         int init(const String &file_path);
         int selectSection(const String &section);
         int getSection(const StrVector &pararr, const StrVector &valarr);
         String getConfig(const String &par);
     private:
-        typedef std::map<String, String> ConfigSectionData;
+        typedef std::map<String, String> Entrys;
         
         struct Section{
             String section_name;
-            ConfigSectionData cd;
+            Entrys entry;
             Section() {
-                cd.clear();
+                entry.clear();
             }
             Section(const String &name) {
                 section_name = name;
-                cd.clear();
+                entry.clear();
             }
             void Set(const String &par, const String &val) {
-                cd[par] = val;
+                entry[par] = val;
             }
             String Get(const String &par) {
-                if (cd.count(par)) {
-                    return cd[par];
+                if (entry.count(par)) {
+                    return entry[par];
                 }
                 return "";
             }
@@ -38,6 +44,7 @@ namespace Judegr{
         typedef std::vector<Section> Data;
         Data data;
         String section_now;
+        int now_section_id;
     };
 }
 

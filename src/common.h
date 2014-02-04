@@ -59,6 +59,13 @@ namespace Judger{
         }
     }
     
+    inline bool alphaornumber(char x) {
+        if (x>='a' && x<='z') return true;
+        if (x>='A' && x<='Z') return true;
+        if (x>='0' && x<='9') return true;
+        return false;
+    }
+    
     unsigned long ts2ms(struct timespec ts) {
         return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
     }
