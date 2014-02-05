@@ -87,3 +87,18 @@ int Config::init(const String &file_path) {
     fclose(ini_file);
     return 0;
 }
+
+int Config::selectSection(const String &section) {
+    for (int i=0; i<(int)data.size(); ++i) {
+        if (data[i].section_name == section) {
+            section_now = data[i].section_name;
+            now_section_id = i;
+            return 0;
+        }
+    }
+    return 1;
+}
+
+String Config::getConfig(const String &par) {
+    return data[now_section_id].entry[par];
+}

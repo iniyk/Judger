@@ -110,7 +110,7 @@ int Compiler::Compile(const String lang_name, const String &target_file_path, co
     }
 }
 
-int Compiler::setupLimits(const String &ini_file_path) {
+int Compiler::setupLimits(const Config &config) {
     FILE *ini_file = fopen(ini_file_path.c_str(), "r");
     if (ini_file == NULL) {
         return 2;

@@ -9,54 +9,50 @@
 #define _JUDGER_COMPILER_
 
 #include "common.h"
+#include "config.h"
 
 namespace Judger{
     class Compiler{
     public:
         Compiler();
-        /*
-         * Func : use this function BEFORE using this class
+        /**
+         * reset this object
          */
         void reset();
-        /*
-         * Func : set up limits such as time limit & memeory limit by an ini file
-         * Input : [ini_file_path]
-         *          ini_file_path : setup file path
-         * Ret   : 0 normal return
-         *         1 ini file formatting error
-         *         2 ini file path invalid
+        /**
+         * set up limits such as time limit & memeory limit by config
+         * @param  config setup config
+         * @return        0 normal return\n
+         *                1 ini file formatting error\n
+         *                2 ini file path invalid
          */
-        int setupLimits(const String &ini_file_path);
-        /*
-         * Func : register a new compiler by cmp file
-         * Input : [cmp_path]
-         *          cmp_path : cmp file path
-         * Ret : 0 normal return
-         *       1 cmp file formatting error
-         *       2 cmp file path invalid
-         *       3 language has already been registered
-         *
+        int setupLimits(const Config &config);
+        /**
+         * register a new compiler by cmp file
+         * @param  cmp_path cmp file path
+         * @return          0 normal return\n
+         *                  1 cmp file formatting error\n
+         *                  2 cmp file path invalid\n
+         *                  3 language has already been registered
          */
         int Register(const String &cmp_path);
-        /*
-         * Func : compile target file
-         * Input : [lang_name, target_file_path, output_exec_file]
-         *          lang_name : language name
-         *          target_file_path : target file path
-         *          output_exec_file : output execute file path
-         * Ret : 0 normal return
-         *       1 compile error, error message will be saven & could get it by Error() Func
-         *       2 target file invalid
-         *       3 language has not been registered
-         *       4 compiler execute failed
+        /**
+         * compile target file
+         * @param  lang_name        language name
+         * @param  target_file_path target file path
+         * @param  output_exec_file output execute file path
+         * @return                  0 normal return\n
+         *                          1 compile error, error message will be saven & could get it by Error() Func\n
+         *                          2 target file invalid\n
+         *                          3 language has not been registered\n
+         *                          4 compiler execute failed
          */
         int Compile(const String &lang_name, const String &target_file_path, const String &output_exec_file);
-        /*
-         * Func : get last compile error message
-         * Ret : if Compile() hasn't been used since last init() it will return ""
-         *       if no error occured last Compile() it will return ""
-         *       else will get the error message
-         *
+        /**
+         * get last compile error message
+         * @return if Compile() hasn't been used since last init() it will return ""\n
+         *         if no error occured last Compile() it will return ""\n
+         *         else will get the error message
          */
         String Error();
     private:
@@ -102,16 +98,16 @@ namespace Judger{
         LimitMap lm;
         String error_message;
         /*-----------private function------------*/
-        /*
-         *  Func : Read an cmp file & regist a new compiler by it
-         *  Input : [director, cmp_path]
-         *          director : id of lsa underlabel
-         *          cmp_path : cmp file path
-         *  Ret   : 0 normal return
-         *          1 cmp file formatting error
-         *          2 cmp file path invalid
+        /**
+         * Read an cmp file & regist a new compiler by it
+         * @param  director id of lsa underlabel
+         * @param  cmp_path cmp file path
+         * @return          0 normal return\n
+         *                  1 cmp file formatting error\n
+         *                  2 cmp file path invalid
          */
         int SetupByCmpFile(int director, const String &cmp_path);
+        void 
     };
 
 }

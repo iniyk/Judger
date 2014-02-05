@@ -14,8 +14,18 @@ namespace Judegr{
          *                   2 ini file path invalid
          */
         int init(const String &file_path);
+        /**
+         * select a Section
+         * @param  section section wanner to select
+         * @return         0 Normal return, with no error occur
+         *                 1 No such section
+         */
         int selectSection(const String &section);
-        int getSection(const StrVector &pararr, const StrVector &valarr);
+        /**
+         * get config from now section
+         * @param  par param name
+         * @return     config entry value
+         */
         String getConfig(const String &par);
     private:
         typedef std::map<String, String> Entrys;
