@@ -25,14 +25,39 @@
 #include <sys/resource.h>
 
 namespace Judger{
-    const int MAX_FILE_PATH = 1024;
-    const int MAX_STR_LENGTH = 1024;
-    const int MAX_INT_LENGTH = 40;
-    const int MAX_INT64 = 32767;
-
     typedef std::string String;
     typedef std::map<String, int> LimitMap;
     typedef std::vector<string> StrVector;
+    
+    const int MAX_FILE_PATH = 1024;
+    const int MAX_STR_LENGTH = 1024;
+    const int MAX_PROGRAM_OUTPUT = 4096;
+    const int MAX_INT_LENGTH = 40;
+    const int MAX_INT64 = 32767;
+    
+    const String config_file_path("/etc/Judger/Judger.conf");
+    const String player_log_file_path("/var/Judger/player.log");
+
+
+    void seperate(const String &str, StrVector &res, char sep = ' ') {
+        int len = str.length();
+        char buffer[MAX_STR_LENGTH];
+        int now = 0;
+        
+        res.clean();
+        
+        for (int i=0; i<len; ++i) {
+            if (str[i]==sep || (sep=='\n' && str[i]=='\r')) {
+                if (now>0) {
+                    buffer[now] = 0;
+                    res.push_back(String(buffer));
+                    now = 0;
+                }
+            } else {
+                buffer[now++] = str[i];
+            }
+        }
+    }
     
     String int2string(int x) {
         char tmp[MAX_INT_LENGTH];

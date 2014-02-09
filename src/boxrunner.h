@@ -20,11 +20,21 @@ namespace Judger{
          */
         void reset();
         /**
-         * add a limit such as time limit & memeory limit
-         * @param limit_name  limit name
-         * @param limit_val  limit value
+         * Setup Time limit
+         * @param val time limit in mircosecond
          */
-        void addLimit(const String &limit_name, int limit_val);
+        void SetTimeLimit(int val);
+        /**
+         * Setup Memory limit
+         * @param val memory limit in kb
+         */
+        void SetMemoryLimit(int val);
+        /**
+         * Setup system call banned
+         * @param ban ban list
+         * @param size ban list size
+         */
+        void SetPolicy(int16_t ban[], int size);
         /**
          * add a run-time arguement
          * @param arg run-time arg, such as -t
@@ -71,5 +81,6 @@ namespace Judger{
         LimitMap lm;
         ArgsArray aa;
         String result;
+        minisbox_t* pmsb;
     };
 }

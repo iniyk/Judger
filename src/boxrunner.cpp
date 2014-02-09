@@ -16,24 +16,18 @@ res_t BoxRunner::probe(const sandbox_t* psbox, probe_t key) {
     return 0;
 }
 
-void BoxRunner::policy_setup(minisbox_t* pmsb)/////this Function is not complete
+void BoxRunner::SetPolicy(int16_t ban[], int size)/////this Function is not complete
 {
     assert(pmsb);
 
-    const int16_t ban_list[] =
-    {
-//-----------------------------------------------------------------//
-        -1,
-    };
     /* initialize table of system call rules */
-    int sc, i = 0;
+    int sc;
     for (sc = 0; sc <= INT16_MAX; sc++)
     {
-        pmsb->sc_table[sc] = _KILL_RF;
-    }
-    while ((sc = sc_safe[i++]) >= 0)
-    {
         pmsb->sc_table[sc] = _CONT;
+    }
+    for (int i=0; i<size; ++i) {
+        pmsb->sc_table[ban[i]] = _KILL_RF;
     }
     /* override the default policy of the sandbox */
     pmsb->default_policy = pmsb->sbox.ctrl.policy;

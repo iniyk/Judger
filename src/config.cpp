@@ -27,7 +27,7 @@ int Config::init(const String &file_path) {
         for (int i=0; i<tot; ++i) {
             if (buffer[i]==' ' || buffer[i] == '\r' || buffer == '\n') {
                 ;
-            } else if (buffer[i] == ';' ) {
+            } else if (buffer[i] == ';' || buffer[i] == '#') {
                 break;
             } else {
                 buffer[len++] = buffer[i];
