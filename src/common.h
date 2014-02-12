@@ -24,6 +24,8 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
+#include "policy.h"
+
 namespace Judger{
     typedef std::string String;
     typedef std::map<String, int> LimitMap;
@@ -31,13 +33,27 @@ namespace Judger{
     
     const int MAX_FILE_PATH = 1024;
     const int MAX_STR_LENGTH = 1024;
+    const int MAX_ARG_NUMBER = 20;
     const int MAX_PROGRAM_OUTPUT = 4096;
     const int MAX_INT_LENGTH = 40;
     const int MAX_INT64 = 32767;
     
+    const int AUTO_TIME_LIMIT = 5000000;            //5sec
+    const int AUTO_MEMORY_LIMIT = 32*1024*1024;     //32MB
+    const int AUTO_DISK_LIMIT = 32*1024*1024;       //32MB
+    
     const String config_file_path("/etc/Judger/Judger.conf");
     const String player_log_file_path("/var/Judger/player.log");
-
+    
+    typedef void (*LogFunc)(const String&);
+    
+    void setup_var() {
+        init_banlist();
+    }
+    
+    void silent_log_func(const String &str) {
+        //nothing will be done
+    }
 
     void seperate(const String &str, StrVector &res, char sep = ' ') {
         int len = str.length();
@@ -56,6 +72,12 @@ namespace Judger{
             } else {
                 buffer[now++] = str[i];
             }
+        }
+        
+        if (now>0) {
+            buffer[now] = 0;
+            res.push_back(String(buffer));
+            now = 0;
         }
     }
     

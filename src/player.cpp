@@ -27,9 +27,15 @@ void Player::reset(char *argv[]) {
 }
 
 void Player::LOG(const String &str) {
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time(&rawtime);
+    timeinfo = localtime (&rawtime);
+    
     FILE *log_file = fopen(player_log_file_path.c_str(), "a");
     while (log_file == NULL) log_file = fopen(player_log_file_path.c_str(), "a");
-    fprintf(log_file, "Player %s : %s\n", player_name, str);
+    fprintf(log_file, "%s | Player %s : %s\n", asctime(timeinfo), player_name.c_str(), str.c_str());
     fclose(log_file);
 }
 
@@ -49,14 +55,14 @@ int Player::player_startup() {
     int box_input[2], box_output[2];
     pipe(box_input);
     pipe(box_output);
-    int status = boxrunner.Run(exec_path, box_input[0], box_output[1]);
-    if (status != 0) {
-        if (status == 1) LOG("[ERROR] sandbox error");
-        if (status == 2) LOG("[ERROR] target file invalid");
+    int box_pid = boxrunner.Run(exec_path, box_input[0], box_output[1]);
+    if (box_pid < 0) {
+        if (box_pid == -1) LOG("[ERROR] sandbox error");
+        if (box_pid == -2) LOG("[ERROR] target file invalid");
         return 1;
     }
     
-    last_clock = clock();
+    //last_clock = clock();
     
     while (1) {
         scanf("%s", buffer);
@@ -67,12 +73,13 @@ int Player::player_startup() {
             program_buffer[len] = '\n';
             program_buffer[len+1] = 0;
             write(box_input[1], program_buffer, strlen(program_buffer));
-            last_clock = clock();
+            //last_clock = clock();
         } else if (opt == "GameOver") {
             
             return 0;
         } else if (opt == "RequestNextStep") {
             usleep(step_time_limit);
+            
             String user_output = "";
             int now_len = read(box_output[0], program_buffer, sizeof(program_buffer));
             while (now_len != 0) {
@@ -80,7 +87,15 @@ int Player::player_startup() {
                 user_output += program_buffer;
                 now_len = read(box_output[0], program_buffer, sizeof(program_buffer));
             }
-            StrVector user_output_arr
+            
+            if (user_output == "") {
+                printf("UserTimeLimitError\n");
+                
+                
+                return 0;
+            }
+            
+            StrVector user_output_arr;
             seperate(user_output, user_output_arr, '\n');
             for (int i=0; i<(int)user_output_arr.size(); ++i) {
                 printf("OutputLine %s\n", user_output_arr[i]);

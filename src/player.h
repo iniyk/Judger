@@ -5,7 +5,7 @@ namespace Judger{
     {
     public:
         void reset(char *argv[]);
-        void 
+        void Run();
 
     private:
         Config config;
@@ -21,9 +21,11 @@ namespace Judger{
         char program_buffer[MAX_PROGRAM_OUTPUT];
         
         void LOG(const String &str);
+        
         void setup_boxrunnrt();
-        void overlord_startup();
-        void player_startup();
-        void runonce_startup();
+        
+        int overlord_startup();
+        int player_startup();
+        int runonce_startup();
     };
 }

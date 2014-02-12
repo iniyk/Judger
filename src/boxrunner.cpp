@@ -2,6 +2,18 @@
 
 using namespace Judger;
 
+void BoxRunner::local_log_func(const String &str) {
+    
+}
+
+void BoxRunner::reset(LogFunc lf = &silent_log_func) {
+    memset(args, 0, sizeof(args));
+    memory_limit = AUTO_MEMORY_LIMIT;
+    time_limit = AUTO_TIME_LIMIT;
+    language = 'cpp';
+    LOG = lf;
+}
+
 res_t BoxRunner::probe(const sandbox_t* psbox, probe_t key) {
     switch (key) {
         case P_ELAPSED:
@@ -14,6 +26,56 @@ res_t BoxRunner::probe(const sandbox_t* psbox, probe_t key) {
             break;
     }
     return 0;
+}
+
+void BoxRunner::SetLanguage(const String &lang) {
+    language = lang;
+}
+
+void BoxRunner::SetTimeLimit(int val) {
+    time_limit = val;
+}
+
+void BoxRunner::SetMemoryLimit(int val) {
+    memory_limit = val;
+}
+
+int BoxRunner::Run(const String &target_path, int fd_rd, int fd_wt) {
+    strcpy(args[0], target_path.c_str());
+    
+    if (sandbox_init(&msb.sbox, args) != 0) {
+#ifdef __DEBUG__
+        LOG("[ERROR] error at boxrunner Run() -- sandbox_init error");
+#endif
+        return -1;
+    }
+    
+    SetPolicy
+}
+
+int BoxRunner::status() {
+    int ret;
+    
+    pid_t tmp = waitpid(sand_pid, &ret, WNOHANG);
+    
+    if (tmp == 0) return 0;
+    
+    return WEXITSTATUS(status);
+}
+
+int BoxRunner::kill() {
+    return (int)kill(0, SIGKILL);
+}
+
+void BoxRunner::setup_policy() {
+    for (int i=0; i<=INT16_MAX; ++i) {
+        msb.sc_table[sc] = _CONT;
+    }
+    bool *ban_list = &banlist_other;
+    if (language == 'java') {
+        
+    }
+    for (int i)
 }
 
 void BoxRunner::SetPolicy(int16_t ban[], int size)/////this Function is not complete

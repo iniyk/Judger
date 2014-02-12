@@ -1,0 +1,166 @@
+#ifndef _JUDGER_POLICY_
+#define _JUDGER_POLICY_
+
+namespace Judger{
+    bool banlist_normal[500] = {false};
+    bool banlist_java[500] = {false};
+    bool banlist_csharp[500] = {false};
+    
+    void init_banlist() {
+//auto
+        banlist_normal[SYS__sysctl]=true;
+        banlist_normal[SYS_chdir]=true;
+        banlist_normal[SYS_chmod]=true;
+        banlist_normal[SYS_chown]=true;
+        banlist_normal[SYS_chroot]=true;
+        banlist_normal[SYS_clone]=true;
+        banlist_normal[SYS_creat]=true;
+        banlist_normal[SYS_create_module]=true;
+        banlist_normal[SYS_delete_module]=true;
+        banlist_normal[SYS_fork]=true;
+        banlist_normal[SYS_getpgrp]=true;
+        banlist_normal[SYS_kill]=true;
+        banlist_normal[SYS_mkdir]=true;
+        banlist_normal[SYS_mknod]=true;
+        banlist_normal[SYS_mount]=true;
+        banlist_normal[SYS_rmdir]=true;
+        banlist_normal[SYS_ptrace]=true;
+        banlist_normal[SYS_reboot]=true;
+        banlist_normal[SYS_rename]=true;
+        banlist_normal[SYS_restart_syscall]=true;
+        banlist_normal[SYS_select]=true;
+        banlist_normal[SYS_setgid]=true;
+        banlist_normal[SYS_setitimer]=true;
+        banlist_normal[SYS_setgroups]=true;
+        banlist_normal[SYS_sethostname]=true;
+        banlist_normal[SYS_setrlimit]=true;
+        banlist_normal[SYS_setuid]=true;
+        banlist_normal[SYS_settimeofday]=true;
+        banlist_normal[SYS_tkill]=true;
+        banlist_normal[SYS_setrlimit]=true;
+        banlist_normal[SYS_setuid]=true;
+        banlist_normal[SYS_vfork]=true;
+        banlist_normal[SYS_vhangup]=true;
+        banlist_normal[SYS_vserver]=true;
+        banlist_normal[SYS_wait4]=true;
+        banlist_normal[SYS_clock_nanosleep]=true;
+        banlist_normal[SYS_nanosleep]=true;
+        banlist_normal[SYS_pause]=true;
+#ifndef __i386__
+        banlist_normal[SYS_accept]=true;
+        banlist_normal[SYS_bind]=true;
+        banlist_normal[SYS_connect]=true;
+        banlist_normal[SYS_listen]=true;
+        banlist_normal[SYS_socket]=true;
+#else
+        banlist_normal[SYS_signal]=true;
+        banlist_normal[SYS_waitpid]=true;
+        banlist_normal[SYS_nice]=true;
+        banlist_normal[SYS_waitpid]=true;
+        banlist_normal[SYS_umount]=true;
+        banlist_normal[SYS_socketcall]=true;
+#endif
+//Java
+        banlist_java[SYS__sysctl]=true;
+        banlist_java[SYS_chdir]=true;
+        banlist_java[SYS_chmod]=true;
+        banlist_java[SYS_chown]=true;
+        banlist_java[SYS_chroot]=true;
+        banlist_java[SYS_creat]=true;
+        banlist_java[SYS_create_module]=true;
+        banlist_java[SYS_delete_module]=true;
+        banlist_java[SYS_fork]=true;
+        banlist_java[SYS_getpgrp]=true;
+        banlist_java[SYS_kill]=true;
+        banlist_java[SYS_mkdir]=true;
+        banlist_java[SYS_mknod]=true;
+        banlist_java[SYS_mount]=true;
+        banlist_java[SYS_rmdir]=true;
+        banlist_java[SYS_ptrace]=true;
+        banlist_java[SYS_reboot]=true;
+        banlist_java[SYS_rename]=true;
+        banlist_java[SYS_restart_syscall]=true;
+        banlist_java[SYS_select]=true;
+        banlist_java[SYS_setgid]=true;
+        banlist_java[SYS_setitimer]=true;
+        banlist_java[SYS_setgroups]=true;
+        banlist_java[SYS_sethostname]=true;
+        banlist_java[SYS_setrlimit]=true;
+        banlist_java[SYS_setuid]=true;
+        banlist_java[SYS_settimeofday]=true;
+        banlist_java[SYS_tkill]=true;
+        banlist_java[SYS_setrlimit]=true;
+        banlist_java[SYS_setuid]=true;
+        banlist_java[SYS_vfork]=true;
+        banlist_java[SYS_vhangup]=true;
+        banlist_java[SYS_vserver]=true;
+        banlist_java[SYS_wait4]=true;
+        banlist_java[SYS_clock_nanosleep]=true;
+        banlist_java[SYS_nanosleep]=true;
+        banlist_java[SYS_pause]=true;
+#ifndef __i386__
+        banlist_java[SYS_accept]=true;
+        banlist_java[SYS_bind]=true;
+        banlist_java[SYS_connect]=true;
+        banlist_java[SYS_listen]=true;
+        banlist_java[SYS_socket]=true;
+#else
+        banlist_java[SYS_signal]=true;
+        banlist_java[SYS_waitpid]=true;
+        banlist_java[SYS_nice]=true;
+        banlist_java[SYS_waitpid]=true;
+        banlist_java[SYS_umount]=true;
+        banlist_java[SYS_socketcall]=true;
+#endif
+//c#
+        banlist_csharp[SYS__sysctl]=true;
+        banlist_csharp[SYS_chdir]=true;
+        banlist_csharp[SYS_chmod]=true;
+        banlist_csharp[SYS_chown]=true;
+        banlist_csharp[SYS_chroot]=true;
+        banlist_csharp[SYS_creat]=true;
+        banlist_csharp[SYS_create_module]=true;
+        banlist_csharp[SYS_delete_module]=true;
+        banlist_csharp[SYS_fork]=true;
+        banlist_csharp[SYS_getpgrp]=true;
+        banlist_csharp[SYS_kill]=true;
+        banlist_csharp[SYS_rmdir]=true;
+        banlist_csharp[SYS_ptrace]=true;
+        banlist_csharp[SYS_reboot]=true;
+        banlist_csharp[SYS_rename]=true;
+        banlist_csharp[SYS_restart_syscall]=true;
+        banlist_csharp[SYS_select]=true;
+        banlist_csharp[SYS_setgid]=true;
+        banlist_csharp[SYS_setitimer]=true;
+        banlist_csharp[SYS_setgroups]=true;
+        banlist_csharp[SYS_sethostname]=true;
+        banlist_csharp[SYS_setrlimit]=true;
+        banlist_csharp[SYS_setuid]=true;
+        banlist_csharp[SYS_settimeofday]=true;
+        banlist_csharp[SYS_tkill]=true;
+        banlist_csharp[SYS_setrlimit]=true;
+        banlist_csharp[SYS_setuid]=true;
+        banlist_csharp[SYS_vfork]=true;
+        banlist_csharp[SYS_vhangup]=true;
+        banlist_csharp[SYS_vserver]=true;
+        banlist_csharp[SYS_wait4]=true;
+        banlist_csharp[SYS_clock_nanosleep]=true;
+        banlist_csharp[SYS_nanosleep]=true;
+        banlist_csharp[SYS_pause]=true;
+#ifndef __i386__
+        banlist_csharp[SYS_accept]=true;
+        banlist_csharp[SYS_bind]=true;
+        banlist_csharp[SYS_listen]=true;
+#else
+        banlist_csharp[SYS_signal]=true;
+        banlist_csharp[SYS_waitpid]=true;
+        banlist_csharp[SYS_nice]=true;
+        banlist_csharp[SYS_waitpid]=true;
+        banlist_csharp[SYS_umount]=true;
+        banlist_csharp[SYS_socketcall]=true;
+        
+#endif
+    }
+}
+
+#endif

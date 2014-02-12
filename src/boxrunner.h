@@ -18,7 +18,12 @@ namespace Judger{
         /**
          * reset this object
          */
-        void reset();
+        void reset(LogFunc );
+        /**
+         * Setup language
+         * @param lang language
+         */
+        void SetLanguage(const String &lang);
         /**
          * Setup Time limit
          * @param val time limit in mircosecond
@@ -30,12 +35,6 @@ namespace Judger{
          */
         void SetMemoryLimit(int val);
         /**
-         * Setup system call banned
-         * @param ban ban list
-         * @param size ban list size
-         */
-        void SetPolicy(int16_t ban[], int size);
-        /**
          * add a run-time arguement
          * @param arg run-time arg, such as -t
          */
@@ -45,29 +44,38 @@ namespace Judger{
          * @param  target_path target file path
          * @param  fd_rd       read file describe code
          * @param  fd_wt       write file describe code
-         * @return             0 normal return\n
-         *                     1 sandbox error\n
-         *                     2 target file invalid
+         * @return             pid>0 normal return\n
+         *                     -1 sandbox error\n
+         *                     -2 target file invalid
          */
         int Run(const String &target_path, int fd_rd, int fd_wt);
         /**
          * get last run result message
          * @return if Run() hasn't been used since last init() it will return ""\n
-         *         else will get the running message : TLE, OLE, RF, MLE, RE, OK
+         *         else will get the running message : TLE, OLE, RF, MLE, RE
          */
         String Result();
+        /**
+         * get sandbox running status
+         * @return 0 running\n
+         *         1 has been exit
+         */
+        int status();
+        /**
+         * kill sandbox process
+         * @return 0 kill success
+         */
+        int kill();
     private:
         //Sandbox Defination
         const String result_name[] = {"PD", "OK", "RF", "ML", "OL", "TL", "RT", "AT", "IE", "BP", NULL};
         typedef action_t* (*rule_t)(const sandbox_t*, const event_t*, action_t*);
-        typedef struct
-        {
+        typedef struct {
            sandbox_t sbox;
            policy_t default_policy;
            rule_t sc_table[INT16_MAX + 1];
         } minisbox_t;
-        typedef enum
-        {
+        typedef enum {
             P_ELAPSED = 0, P_CPU = 1, P_MEMORY = 2,
         } probe_t;
         //Sandbox Function
@@ -75,12 +83,15 @@ namespace Judger{
         void policy(const policy_t*, const event_t*, action_t*);
         action_t* _KILL_RF(const sandbox_t*, const event_t*, action_t*);
         action_t* _CONT(const sandbox_t*, const event_t*, action_t*);
-        
-        typedef std::vector<String> ArgsArray;
 
-        LimitMap lm;
-        ArgsArray aa;
-        String result;
-        minisbox_t* pmsb;
+        int memory_limit, time_limit;
+        char args[MAX_ARG_NUMBER][MAX_STR_LENGTH];
+        String result, language;
+        minisbox_t msb;
+        pid_t sand_pid;
+        
+        LogFunc LOG;
+        
+        void setup_policy();
     };
 }
