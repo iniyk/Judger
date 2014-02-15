@@ -24,10 +24,25 @@ int Config::init(const String &file_path) {
     
     while (fgets(buffer, MAX_STR_LENGTH, ini_file) != NULL) {
         int len = 0, tot = strlen(buffer);
+        char in_quota = 0;
         for (int i=0; i<tot; ++i) {
-            if (buffer[i]==' ' || buffer[i] == '\r' || buffer == '\n') {
+            if (buffer[i] == '#' || buffer[i] == ';') break;
+            if (buffer[i] == 34 || buffer[i] == 39) {
+                else if (in_quota == 0) in_quota = buffer[i];
+                else if (in_quota == buffer[i]) in_quota = 1;
+            } else if (in_quota==1 && (!(buffer[i]==' ' || buffer[i] == '\r' || buffer == '\n'))) {
+                return 1;
+            }
+        }
+        
+        in_quota = 0;
+        for (int i=0; i<tot; ++i) {
+            if (buffer[i] == 34 || buffer[i] == 39) {
+                if (in_quota == 0) in_quota = buffer[i];
+                else if (in_quota == buffer[i]) in_quota = 0;
+            } else if ((!in_quota) && (buffer[i]==' ' || buffer[i] == '\r' || buffer == '\n')) {
                 ;
-            } else if (buffer[i] == ';' || buffer[i] == '#') {
+            } else if ((!in_quota) && buffer[i] == ';' || buffer[i] == '#') {
                 break;
             } else {
                 buffer[len++] = buffer[i];
@@ -62,6 +77,7 @@ int Config::init(const String &file_path) {
         } else {
             //Entry init
             int equal = -1;
+            int quota[2] = {-1, -1};
             for (int i=0; i<len; ++i) {
                 if (buffer[i] == '=') {
                     if (equal >= 0) return 1;
@@ -69,7 +85,7 @@ int Config::init(const String &file_path) {
                     if (equal == 0 || equal == len-1) return 1;
                 } else if (alphaornumber(buffer[i])) {
                     ;
-                } else {
+                } else if ({
                     return 1;
                 }
             }
